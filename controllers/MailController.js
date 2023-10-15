@@ -42,7 +42,7 @@ class MailController {
       }
       const mailOptions = {
         from: process.env.MAILER_USER,
-        to: "temerep@icloud.com",
+        to: "dzyaliv@ukr.net",
         subject: `Повідомлення від: ${data.name}`
       };
       transporter.sendMail(
