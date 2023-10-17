@@ -6,13 +6,13 @@ const Slider = require("../models/Slider");
 class SliderController {
   async create(req, res) {
     try {
-      const { img, title, desc, src } = req.body;
+      const { img, name, desc, link } = req.body;
 
-      if (!img || !title || !desc || !src) {
+      if (!img || !name || !desc || !link) {
         return res.json({ message: "Required fields are not filled"});
       }
       
-      const result = await Slider.create({ img, title, desc, src })
+      const result = await Slider.create({ img, name, desc, link })
       res.json(result);
 
     } catch (e) { 

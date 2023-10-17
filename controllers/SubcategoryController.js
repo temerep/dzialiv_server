@@ -8,7 +8,7 @@ class SubcategoryController {
     try {
       const { img, name, desc, link, category_id } = req.body;
 
-      if (!img || !name || !link || !category_id) {
+      if ( !name || !link ) {
         return res.json({ message: "Required fields are not filled"});
       }
       
