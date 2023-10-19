@@ -2,17 +2,25 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
 const Slider = require("../models/Slider");
+const cloudinary = require("cloudinary").v2;
+const cloudinaryModule = require('../utils/cloudinary');
+const upload = cloudinaryModule.initializeCloudinary();
 
 class SliderController {
   async create(req, res) {
     try {
-      const { img, name, desc, link } = req.body;
+      const { img } = req.files || {};
+      const { name, desc, link } = req.body;
 
       if (!img || !name || !desc || !link) {
         return res.json({ message: "Required fields are not filled"});
       }
+
+      const imgRes = await cloudinary.uploader.upload(img.tempFilePath, {
+        resource_type: "image"
+      });
       
-      const result = await Slider.create({ img, name, desc, link })
+      const result = await Slider.create({ img: imgRes.secure_url, name, desc, link })
       res.json(result);
 
     } catch (e) { 

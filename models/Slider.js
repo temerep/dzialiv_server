@@ -6,7 +6,7 @@ const sliderSchema = new Schema({
     type: String,
     required: true
   },
-  title: {
+  name: {
     type: String,
     required: true
   },
@@ -14,7 +14,7 @@ const sliderSchema = new Schema({
     type: String,
     required: false
   },
-  src: {
+  link: {
     type: String,
     required: false
   }

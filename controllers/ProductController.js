@@ -1,45 +1,30 @@
-const uuid = require("uuid");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
 const Product = require("../models/Product");
-// const cloudinary = require("cloudinary").v2;
-
-// const cloudinaryUrl = new URL(process.env.CLOUDINARY_URL);
-
-// cloudinary.config({
-//   cloud_name: cloudinaryUrl.hostname,
-//   api_key: cloudinaryUrl.username,
-//   api_secret: cloudinaryUrl.password,
-//   secure: true,
-// });
-
+const cloudinary = require("cloudinary").v2;
+const cloudinaryModule = require('../utils/cloudinary');
+const upload = cloudinaryModule.initializeCloudinary();
 
 class ProductController {
   async create(req, res) {
     try {
-      const { name, desc, link, subcategory_id } = req.body;
       const { img } = req.files || {};
+      const { name, desc, subcategory_id, link } = req.body;
 
-      if (!img || !name || !desc || !link || !subcategory_id) {
+      if (!img || !name || !desc || !subcategory_id || !link) {
         return res.json({ message: "Required fields are not filled"});
       }
 
-      // const filename = uuid.v4()
-      // const imgRes = await cloudinary.uploader.upload(img, {
-      //   resource_type: "image",
-      //   format: "webp",
-      //   quality: "auto",
-      //   flags: "lossy",
-      //   fetch_format: "auto",
-      //   public_id: filename,
-      // });
+      const imgRes = await cloudinary.uploader.upload(img.tempFilePath, {
+        resource_type: "image"
+      });
       
-      const result = await Product.create({ img, name, desc, link, subcategory_id })
+      const result = await Product.create({ img: imgRes.secure_url, name, desc, link, subcategory_id })
       res.json(result);
 
     } catch (e) { 
-      console.error(e)
+      console.error(e.response.data)
     }
   }
   async remove(req, res) {
