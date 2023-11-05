@@ -44,7 +44,8 @@ class SubcategoryController {
   }
   async getAll(req, res) {
     try {
-      const subcategories = await Subcategory.find();
+      let query = req.query || {};
+      const subcategories = await Subcategory.find(query);
       return res.json(subcategories);
     } catch (e){ 
       console.error(e)

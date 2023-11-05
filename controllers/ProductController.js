@@ -13,7 +13,7 @@ class ProductController {
       const { name, desc, subcategory_id, link } = req.body;
 
       if (!img || !name || !desc || !subcategory_id || !link) {
-        return res.json({ message: "Required fields are not filled"});
+        return res.json({ message: "Required fields are not filled" });
       }
 
       const imgRes = await cloudinary.uploader.upload(img.tempFilePath, {
@@ -23,7 +23,7 @@ class ProductController {
       const result = await Product.create({ img: imgRes.secure_url, name, desc, link, subcategory_id })
       res.json(result);
 
-    } catch (e) { 
+    } catch (e) {
       console.error(e.response.data)
     }
   }
@@ -34,23 +34,24 @@ class ProductController {
         return res.status(404).json({ message: "Invalid prodId" });
       }
       const prod = await Product.findOneAndRemove({ _id: prodId });
-      if (!prod) { 
-        return res.json({message: "Item Not Deleted!"})
+      if (!prod) {
+        return res.json({ message: "Item Not Deleted!" })
       }
-      return res.json({message: "Item Deleted"})
-    } catch (e) { 
+      return res.json({ message: "Item Deleted" })
+    } catch (e) {
       console.error(e)
     }
   }
   async getAll(req, res) {
     try {
-      const prods = await Product.find();
+      let query = req.query || {};
+      const prods = await Product.find(query);
       return res.json(prods);
-    } catch (e){ 
-      console.error(e)
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ error: 'Помилка сервера' });
     }
   }
-
 }
 
 module.exports = new ProductController();

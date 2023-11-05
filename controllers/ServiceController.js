@@ -44,7 +44,8 @@ class ServiceController {
   }
   async getAll(req, res) {
     try {
-      const services = await Service.find();
+      let query = req.query || {};
+      const services = await Service.find(query);
       return res.json(services);
     } catch (e){ 
       console.error(e)
